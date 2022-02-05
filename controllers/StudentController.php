@@ -9,13 +9,21 @@ class StudentController
             echo 'Student not found'; die();
         }
 
-         call_user_func([$this, $student['board_type']], $student);
+        call_user_func([$this, $student['board_type']], $student);
     }
 
     private function csm($student)
     {
+        $avgGrade = Student::getAvgGrade($student['id']);
+        $data = [
+            'id' => $student['id'],
+            'name' => $student['name'],
+            'listOfGrades' => Student::getListOfGrade($student['id']),
+            'avg' => $avgGrade['grade'],
+            'finalResult' => $avgGrade['grade'] >= 7 ? 'Pass' : 'Fail'
+        ];
         header('Content-Type: application/json');
-        echo json_encode(['name' => 'zz']);
+        echo json_encode(['student' => $data]);
     }
 
     private function csmb($student)
